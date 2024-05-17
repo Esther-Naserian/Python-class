@@ -1,8 +1,7 @@
 def add(x,y):
     result=x+y
     return result
-
-  def subtract(x,y):
+def subtract(x,y):
       result=x-y  
       return result
 
@@ -18,8 +17,15 @@ def remainder(x,y):
     result=x%y
     return result
 
-def power of(x,y) 
-    result=x**y 
-    return result
 
+def sum(*numbers):
+    total= 0
+    for numbers in numbers:
+        total+=numbers
+    return total
 
+def multiply_many():
+    total = 1
+    for number in number: 
+        total+=number
+    return total
