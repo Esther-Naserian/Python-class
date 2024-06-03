@@ -1,103 +1,98 @@
 class Account:
-    def __init__(self,number,pin):
-        self.number=number
-        self._pin= pin
-        self._balance= 0
-
-    def show_balance(self,pin):
-        if pin ==self.__pin:
-            return self._balance
-        else:
-            return "wrong pin"
-    class Account:
-     def __init__(self,number,pin,baance):
-        self.number=number
-        self.pin=pin
-        self.__balance=0
-def show_balance(self,pin):
-    if pin==self .__pin:
-        return self.__balance
-    else:
-        return "wrong pin" 
-class BankAccount:
-    def __init__(self, first_name, last_name, balance=0.0):
-        self.first_name = first_name
-        self.last_name = last_name
+    def __init__(self, number, pin, owner_name, balance=0, overdraft_limit=0, interest_rate=0.0, minimum_balance=0):
+        self.number = number
+        self.__pin = pin
+        self.owner_name = owner_name
         self.balance = balance
-
-    def deposit(self, amount):
-        self.balance += amount
-        print(f"Deposit of {amount} made. New balance: {self.balance}")
-
-    def withdraw(self, amount):
-        if self.balance >= amount:
-            self.balance -= amount
-            print(f"Withdrawal of {amount} made. New balance: {self.balance}")
-        else:
-            print("Insufficient balance. Withdrawal declined.")
-
-    def view_account_details(self):
-        print(f"Account Owner: {self.first_name} {self.last_name}")
-        print(f"Current Balance: {self.balance}")
-
-    def change_account_owner(self, first_name, last_name):
-        self.first_name = first_name
-        self.last_name = last_name
-        print(f"Account owner updated to {first_name} {last_name}")
-
-    def account_statement(self):
-        print("Account Statement:")
-        print(f"Account Owner: {self.first_name} {self.last_name}")
-        print(f"Current Balance: {self.balance}")
-
-    def set_overdraft_limit(self, limit):
-        self.overdraft_limit = limit
-        print(f"Overdraft limit set to {limit}")
-
-    def interest_calculation(self, rate):
-        interest = self.balance * rate
-        self.balance += interest
-        print(f"Interest calculated. New balance: {self.balance}")
-
-    def freeze_account(self):
-        self.frozen = True
-        print("Account frozen.")
-
-    def unfreeze_account(self):
-        self.frozen = False
-        print("Account unfrozen.")
-
-    def transaction_history(self):
-        print("Transaction History:")
-        
-
-    def set_minimum_balance(self, minimum_balance):
+        self.overdraft_limit = overdraft_limit
+        self.interest_rate = interest_rate
         self.minimum_balance = minimum_balance
-        print(f"Minimum balance set to {minimum_balance}")
-
-    def transfer_funds(self, other_account, amount):
-        if self.balance >= amount:
-            self.balance -= amount
-            other_account.balance += amount
-            print(f"Transfer of {amount} made to {other_account.first_name} {other_account.last_name}. New balance: {self.balance}")
+        self.transaction_history = []
+        self.frozen = False
+        self.__account_status = "Open"
+    def account_status(self):
+        return self.__account_status
+    def show_balance(self, pin):
+        if pin == self.__pin:
+            return self.balance
         else:
-            print("Insufficient balance. Transfer declined.")
-
-    def close_account(self):
-        print("Account closed. All operations terminated.")
-     
-
-
-
-
-
-
-
-
-
-
-        
-
-
-    
-    
+            return "Wrong Pin"
+    def view_account_details(self, pin):
+        if pin == self.__pin:
+            return f"Account Number: {self.number}\nOwner Name: {self.owner_name}\nBalance: {self.balance}\nStatus: {self.account_status()}"
+        else:
+            return "Wrong Pin"
+    def change_account_owner(self, pin, new_owner_name):
+        if pin == self.__pin:
+            self.owner_name = new_owner_name
+            return "Owner's information is updated "
+        else:
+            return "Wrong Pin"
+    def set_overdraft_limit(self, pin, new_limit):
+        if pin == self.__pin:
+            self.overdraft_limit = new_limit
+            return "Overdraft limit is updated"
+        else:
+            return "Wrong Pin"
+    def calculate_interest(self):
+        interest_amount = self.balance * self.interest_rate
+        self.balance += interest_amount
+        return f"Interest of {interest_amount} applied. New balance: {self.balance}"
+    def freeze_account(self, pin):
+        if pin == self.__pin:
+            self.frozen = True
+            return "Account is frozen"
+        else:
+            return "Wrong Pin"
+    def unfreeze_account(self, pin):
+        if pin == self.__pin:
+            self.frozen = False
+            return "Account unfrozen "
+        else:
+            return "Wrong Pin"
+    def transaction_history(self):
+        return self.transaction_history
+    def set_minimum_balance(self, pin, new_minimum_balance):
+        if pin == self.__pin:
+            self.minimum_balance = new_minimum_balance
+            return "Minimum balance requirement updated"
+        else:
+            return "Wrong Pin"
+    def transfer_funds(self, pin, target_account, amount):
+        if pin == self.__pin:
+            if not self.frozen:
+                if self.balance + self.overdraft_limit - amount >= self.minimum_balance:
+                    self.balance -= amount
+                    target_account.balance += amount
+                    self.transaction_history.append(f"Transferred {amount} to account {target_account.number}")
+                    return "Transfer successful"
+                else:
+                    return "Insufficient funds"
+            else:
+                return "Account frozen"
+        else:
+            return "Wrong Pin"
+    def close_account(self, pin):
+        if pin == self.__pin:
+            self.balance = 0
+            self.frozen = True
+            self.owner_name = "Closed Account"
+            self.transaction_history.append("Account closed")
+            self.__account_status = "Closed"
+            return "Account closed"
+        else:
+            return "Wrong Pin"
+acc1 = Account(number=2007, pin=1998, owner_name="Phines")
+print(acc1.view_account_details(1998))
+acc1.close_account(5000)
+print(acc1.view_account_details(1998))
+print(acc1.set_minimum_balance(1998, 5000))
+# print(acc1.transaction_history())
+print(acc1.freeze_account(1998))
+print(acc1.unfreeze_account(1998))
+print(acc1.view_account_details(1998))
+print(acc1.transfer_funds(1998, acc1, 3000))
+print(acc1.view_account_details(1998))
+# print(acc1.transaction_history())
+acc1.change_account_owner(2007, "Esther" )
+   
