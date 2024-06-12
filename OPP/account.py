@@ -9,25 +9,20 @@ class Account:
         self.minimum_balance = minimum_balance
         self.transaction_history = []
         self.frozen = False
+        self.status = "active"
         self.__account_status = "Open"
     def account_status(self):
         return self.__account_status
-    def show_balance(self, pin):
-        if pin == self.__pin:
-            return self.balance
-        else:
-            return "Wrong Pin"
     def view_account_details(self, pin):
         if pin == self.__pin:
             return f"Account Number: {self.number}\nOwner Name: {self.owner_name}\nBalance: {self.balance}\nStatus: {self.account_status()}"
         else:
             return "Wrong Pin"
-    def change_account_owner(self, pin, new_owner_name):
-        if pin == self.__pin:
-            self.owner_name = new_owner_name
-            return "Owner's information is updated "
-        else:
-            return "Wrong Pin"
+    def   amount_withdrwal(self, withdraw):
+         if withdraw <= self.__balance - self.minimum_balance:
+            self.__balance-= withdraw
+            self.transaction_history.append({"type": "withdraw", "amount": withdraw})
+            print(f'New balance {self.__balance}')  
     def set_overdraft_limit(self, pin, new_limit):
         if pin == self.__pin:
             self.overdraft_limit = new_limit
@@ -38,18 +33,17 @@ class Account:
         interest_amount = self.balance * self.interest_rate
         self.balance += interest_amount
         return f"Interest of {interest_amount} applied. New balance: {self.balance}"
-    def freeze_account(self, pin):
-        if pin == self.__pin:
-            self.frozen = True
-            return "Account is frozen"
-        else:
-            return "Wrong Pin"
+
+    def apply_interest(self, rate):
+        interest = self.calculate_interest(rate)
+        self.__balance += interest
+        print(f"Applied interest is {interest} new balance: {self.__balance}")
     def unfreeze_account(self, pin):
         if pin == self.__pin:
             self.frozen = False
             return "Account unfrozen "
         else:
-            return "Wrong Pin"
+            return "Wrong Pin"      
     def transaction_history(self):
         return self.transaction_history
     def set_minimum_balance(self, pin, new_minimum_balance):
@@ -58,41 +52,27 @@ class Account:
             return "Minimum balance requirement updated"
         else:
             return "Wrong Pin"
-    def transfer_funds(self, pin, target_account, amount):
-        if pin == self.__pin:
-            if not self.frozen:
-                if self.balance + self.overdraft_limit - amount >= self.minimum_balance:
-                    self.balance -= amount
-                    target_account.balance += amount
-                    self.transaction_history.append(f"Transferred {amount} to account {target_account.number}")
-                    return "Transfer successful"
-                else:
-                    return "Insufficient funds"
-            else:
-                return "Account frozen"
-        else:
-            return "Wrong Pin"
+     def transaction_history(self):
+         for i in self.transaction_history:
+              print(f'{i['type']}: {i['amount']}')
+    def transfer_fund(self, transfer_amount, owner_name):
+         if transfer_amount > self.__balance:
+              print(f' Transferred {transfer_amount} to {owner_name}')
+         else:
+              print("You have insufficient amount")       
     def close_account(self, pin):
         if pin == self.__pin:
             self.balance = 0
-            self.frozen = True
-            self.owner_name = "Closed Account"
-            self.transaction_history.append("Account closed")
-            self.__account_status = "Closed"
-            return "Account closed"
-        else:
-            return "Wrong Pin"
-acc1 = Account(number=2007, pin=1998, owner_name="Phines")
-print(acc1.view_account_details(1998))
-acc1.close_account(5000)
-print(acc1.view_account_details(1998))
-print(acc1.set_minimum_balance(1998, 5000))
-# print(acc1.transaction_history())
-print(acc1.freeze_account(1998))
-print(acc1.unfreeze_account(1998))
-print(acc1.view_account_details(1998))
-print(acc1.transfer_funds(1998, acc1, 3000))
-print(acc1.view_account_details(1998))
-# print(acc1.transaction_history())
-acc1.change_account_owner(2007, "Esther" )
+            self.status == 'active'
+            if self.status == 'active':
+              self.status == "closed"
+              print("Account is closed")
+         else:
+              print("Account already closed")
+
+           
+        
+          
+
+
    
